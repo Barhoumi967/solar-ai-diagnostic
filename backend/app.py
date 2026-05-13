@@ -13,6 +13,7 @@ Endpoints :
 """
 
 import logging
+import os
 import sys
 import random
 from collections import deque
@@ -21,11 +22,12 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 
-# ── Chemin backend ────────────────────────────────────────────────────
-ROOT = Path(__file__).parent
+# ── Chemins ───────────────────────────────────────────────────────────
+ROOT         = Path(__file__).parent
+FRONTEND_DIR = ROOT.parent / "frontend"
 sys.path.insert(0, str(ROOT))
 
 from models.fault_classifier import FaultClassifier, FAULT_LABELS
@@ -512,8 +514,20 @@ def download_report(nom_fichier):
                      as_attachment=True, download_name=nom_fichier)
 
 
+# ── Frontend statique ─────────────────────────────────────────────────
+@app.route("/")
+def serve_index():
+    return send_from_directory(str(FRONTEND_DIR), "index.html")
+
+
+@app.route("/<path:path>")
+def serve_static(path):
+    return send_from_directory(str(FRONTEND_DIR), path)
+
+
 # ── Point d'entrée ────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # Note : port 5000 réservé par AirPlay sur macOS → utilisation du port 5001
-    logger.info("Démarrage de l'API Solar AI Diagnostic sur le port 5001")
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    port = int(os.environ.get("PORT", 5001))
+    logger.info(f"Démarrage de l'API Solar AI Diagnostic sur le port {port}")
+    logger.info(f"Ouvrir : http://localhost:{port}")
+    app.run(debug=False, host="0.0.0.0", port=port)

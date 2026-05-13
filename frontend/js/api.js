@@ -1,10 +1,9 @@
 /* ============================================================
    Solar AI Diagnostic — Couche d'accès à l'API Flask
-   Port 5001 (AirPlay bloque le 5000 sur macOS)
-   Gestion globale des erreurs avec messages utilisateur
+   URL relative — fonctionne quel que soit le port
    ============================================================ */
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = '/api';
 
 /* ── Utilitaire : requête générique avec gestion d'erreur ─── */
 async function _fetch(url, options = {}) {
@@ -20,7 +19,7 @@ async function _fetch(url, options = {}) {
   } catch (err) {
     /* Réseau inaccessible */
     if (err.name === 'TypeError' && err.message.includes('fetch')) {
-      throw new Error('API hors ligne — vérifiez que le serveur Flask tourne sur le port 5001.');
+      throw new Error('API hors ligne — vérifiez que le serveur Flask est bien démarré.');
     }
     throw err;
   }

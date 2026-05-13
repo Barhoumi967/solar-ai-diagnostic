@@ -76,41 +76,53 @@ Le projet combine un **backend Flask** exposant une API REST, trois modèles d'I
 
 ### Prérequis
 - Python 3.10+
-- pip
+- Git
 
-### 1. Installer les dépendances
+### Démarrage rapide (Linux / macOS)
 
 ```bash
+git clone https://github.com/votre-repo/solar-ai-diagnostic.git
+cd solar-ai-diagnostic
+bash start.sh
+```
+
+### Démarrage rapide (Windows)
+
+```bat
+git clone https://github.com/votre-repo/solar-ai-diagnostic.git
+cd solar-ai-diagnostic
+start.bat
+```
+
+Le script :
+1. Crée un environnement virtuel Python isolé (`.venv`)
+2. Installe toutes les dépendances automatiquement
+3. Entraîne les modèles IA si nécessaire (première exécution ~30 s)
+4. Choisit automatiquement un port libre (à partir de 5001)
+5. Démarre le serveur — frontend **et** API sur la même URL
+
+Ouvrir ensuite **http://localhost:5001** dans le navigateur.
+
+> Le frontend et l'API sont servis par le même serveur Flask — il n'y a **pas** de second serveur HTTP à lancer.
+
+### Démarrage manuel (sans script)
+
+```bash
+# 1. Créer et activer l'environnement virtuel
+python3 -m venv .venv
+source .venv/bin/activate      # Windows : .venv\Scripts\activate.bat
+
+# 2. Installer les dépendances
+pip install -r backend/requirements.txt
+
+# 3. Lancer le serveur (frontend + API)
 cd backend
-pip install -r requirements.txt
+python app.py
 ```
 
-### 2. Entraîner les modèles IA
+Ouvrir **http://localhost:5001** dans le navigateur.
 
-```bash
-python backend/models/train_all.py
-```
-
-Les modèles entraînés sont sauvegardés dans `backend/models/saved/`.
-
-### 3. Lancer l'API Flask
-
-```bash
-python backend/app.py
-```
-
-L'API démarre sur **http://localhost:5001** (port 5001 — AirPlay occupe le 5000 sur macOS).
-
-### 4. Ouvrir le frontend
-
-```bash
-cd frontend
-python3 -m http.server 8080
-```
-
-Puis ouvrir **http://localhost:8080** dans le navigateur.
-
-### 5. Lancer les tests automatiques
+### Tests automatiques
 
 ```bash
 python backend/tests/test_api.py
