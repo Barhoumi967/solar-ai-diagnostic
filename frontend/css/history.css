@@ -1,0 +1,344 @@
+/* ============================================================
+   Solar AI Diagnostic — Styles page Historique
+   Filtres, graphiques, tableau paginé, modals
+   ============================================================ */
+
+/* ── Barre de filtres ─────────────────────────────────────── */
+.filtres-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filtre-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filtre-label {
+  font-size: .66rem;
+  font-weight: 600;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filtre-select,
+.filtre-date {
+  font-family: var(--font-corps);
+  font-size: .82rem;
+  background: var(--bg-input);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-sm);
+  color: var(--texte-principal);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+  min-width: 170px;
+}
+
+.filtre-select {
+  padding-right: 28px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.filtre-select:focus,
+.filtre-date:focus {
+  border-color: var(--accent-cyan);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,212,255,.1);
+}
+
+/* Correction couleur calendrier dark */
+.filtre-date::-webkit-calendar-picker-indicator {
+  filter: invert(.6);
+  cursor: pointer;
+}
+
+.filtres-actions {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* ── Graphiques côte à côte ───────────────────────────────── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.chart-card {
+  background: var(--bg-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-carte);
+  transition: border-color var(--transition);
+  animation: fadeInUp .5s ease;
+}
+
+.chart-card:hover { border-color: var(--bordure-active); }
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.chart-title {
+  font-family: var(--font-titre);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--texte-principal);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+
+/* ── Tableau ──────────────────────────────────────────────── */
+.table-wrapper {
+  background: var(--bg-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 12px;
+  animation: fadeInUp .55s ease;
+}
+
+.hist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+}
+
+.hist-table thead tr {
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.hist-table th {
+  font-family: var(--font-titre);
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.hist-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(31,41,55,.6);
+  vertical-align: middle;
+}
+
+.hist-table tbody tr { transition: background var(--transition); }
+.hist-table tbody tr:last-child td { border-bottom: none; }
+.hist-table tbody tr:hover { background: rgba(0,212,255,.03); }
+
+/* Couleur de fond selon niveau alerte */
+.row-normal   { }
+.row-attention{ background: rgba(245,158,11,.04); }
+.row-alerte   { background: rgba(255,107,53,.05); }
+.row-critique { background: rgba(239,68,68,.06); }
+
+/* Cellules spécifiques */
+.cell-id        { font-family: var(--font-mono); font-size: .74rem; color: var(--texte-muted); }
+.cell-ts        { font-family: var(--font-mono); font-size: .74rem; color: var(--texte-secondaire); white-space: nowrap; }
+.cell-conf      { font-family: var(--font-mono); font-size: .82rem; }
+.cell-defaut    { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.defaut-dot     { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.cell-loading, .cell-empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--texte-secondaire);
+  font-size: .88rem;
+}
+
+.cell-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Bouton détails */
+.btn-details {
+  font-family: var(--font-corps);
+  font-size: .74rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--bordure);
+  background: var(--bg-principal);
+  color: var(--texte-secondaire);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-details:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-dim);
+}
+
+/* ── Pagination ───────────────────────────────────────────── */
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 4px 0 8px;
+}
+
+.btn-page {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .8rem;
+  padding: 6px 14px;
+}
+
+.page-info {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  color: var(--texte-secondaire);
+}
+
+/* ── Modals ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  animation: fadeInUp .2s ease;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-box {
+  background: var(--bg-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  max-width: 720px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6);
+  animation: fadeInUp .25s ease;
+  position: relative;
+}
+
+.modal-box-sm {
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px; right: 18px;
+  background: none;
+  border: none;
+  color: var(--texte-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color var(--transition);
+  line-height: 1;
+}
+.modal-close:hover { color: var(--texte-principal); }
+
+/* Contenu modal détails */
+.modal-title {
+  font-family: var(--font-titre);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--texte-principal);
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  padding-right: 32px;
+}
+
+.modal-section {
+  font-family: var(--font-titre);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 16px 0 8px;
+}
+
+.modal-params-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.modal-param {
+  background: var(--bg-principal);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.mp-label {
+  font-size: .62rem;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 3px;
+}
+
+.mp-val {
+  font-family: var(--font-mono);
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .filtres-row    { gap: 10px; }
+  .filtre-select,
+  .filtre-date    { min-width: unset; }
+  .filtres-actions{ margin-left: 0; width: 100%; }
+
+  /* Scroll horizontal du tableau sur mobile */
+  .table-wrapper  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .hist-table     { min-width: 620px; }
+  .hist-table th,
+  .hist-table td  { padding: 9px 10px; font-size: .78rem; }
+
+  .modal-box      { padding: 20px 16px; }
+  .modal-params-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .pagination-row { gap: 10px; }
+  .btn-page       { font-size: .74rem; padding: 5px 10px; }
+  .modal-params-grid { grid-template-columns: 1fr 1fr; }
+}

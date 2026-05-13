@@ -1,0 +1,49 @@
+# ── Environnement Python ─────────────────────────────────────────────
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── IDE / Éditeurs ───────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Claude Code ──────────────────────────────────────────────────────
+.claude/
+
+# ── Base de données SQLite (générée au runtime) ───────────────────────
+backend/data/diagnostics.db
+backend/data/*.db
+
+# ── Rapports PDF générés (temporaires) ───────────────────────────────
+backend/data/reports/*.pdf
+
+# ── Fichiers de logs ─────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Variables d'environnement ─────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Jupyter ──────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Pytest / Coverage ────────────────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml

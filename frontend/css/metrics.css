@@ -1,0 +1,194 @@
+/* ============================================================
+   Solar AI Diagnostic — Styles page Métriques IA
+   KPI métriques, tableau rapport, graphiques
+   ============================================================ */
+
+/* ── Grille KPI métriques ─────────────────────────────────── */
+.metrics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.metric-kpi-card {
+  background: var(--bg-carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-carte);
+  transition: border-color var(--transition), transform var(--transition);
+  animation: fadeInUp .4s ease both;
+}
+
+.metric-kpi-card:nth-child(2) { animation-delay: .06s; }
+.metric-kpi-card:nth-child(3) { animation-delay: .12s; }
+.metric-kpi-card:nth-child(4) { animation-delay: .18s; }
+
+.metric-kpi-card:hover {
+  border-color: var(--bordure-active);
+  transform: translateY(-2px);
+}
+
+.kpi-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-icon.succes { background: var(--accent-succes-dim); color: var(--accent-succes); }
+.kpi-icon.cyan   { background: var(--accent-cyan-dim);   color: var(--accent-cyan);   }
+.kpi-icon.orange { background: var(--accent-orange-dim); color: var(--accent-orange); }
+.kpi-icon.violet { background: rgba(139,92,246,.15);     color: var(--accent-violet); }
+
+.kpi-body { min-width: 0; }
+
+.kpi-label {
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--texte-principal);
+  line-height: 1;
+}
+
+.kpi-value-sm {
+  font-size: .88rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--accent-cyan);
+}
+
+/* ── Grille principale (importance + rapport) ─────────────── */
+.metrics-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.metrics-card {
+  padding: 18px 20px;
+  animation: fadeInUp .45s ease;
+}
+
+.metrics-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.metrics-card-title {
+  font-family: var(--font-titre);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--texte-principal);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+
+/* ── Tableau rapport de classification ────────────────────── */
+.rapport-table-wrapper {
+  overflow-x: auto;
+  margin-top: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.rapport-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .83rem;
+}
+
+.rapport-table thead tr {
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.rapport-table th {
+  font-family: var(--font-titre);
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  padding: 10px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.rapport-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(31,41,55,.5);
+  vertical-align: middle;
+}
+
+.rapport-table tbody tr { transition: background var(--transition); }
+.rapport-table tbody tr:last-child td { border-bottom: none; }
+.rapport-table tbody tr:hover { background: rgba(0,212,255,.03); }
+
+.cell-metric {
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  color: var(--texte-secondaire);
+  text-align: right;
+}
+
+.cell-support {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  color: var(--texte-muted);
+  text-align: right;
+}
+
+/* ── Cell loading ─────────────────────────────────────────── */
+.cell-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--texte-secondaire);
+  font-size: .85rem;
+}
+
+.cell-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 16px;
+  color: var(--texte-secondaire);
+  font-size: .85rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .metrics-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 1024px) {
+  .metrics-main-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .metrics-kpi-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .metrics-kpi-grid { grid-template-columns: 1fr; }
+}

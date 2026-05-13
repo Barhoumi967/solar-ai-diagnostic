@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolarAI — Historique</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/history.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ══════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2"    x2="12" y2="5"/>
+        <line x1="12" y1="19"   x2="12" y2="22"/>
+        <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"/>
+        <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+        <line x1="2"  y1="12" x2="5"  y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.22"  y1="19.78" x2="6.34"  y2="17.66"/>
+        <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+      </svg>
+      <span class="logo-text">SolarAI</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigation</div>
+      <a href="index.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="diagnostic.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/>
+        </svg>
+        <span>Diagnostic IA</span>
+      </a>
+      <a href="history.html" class="nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>
+        </svg>
+        <span>Historique</span>
+      </a>
+      <a href="metrics.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+        <span>Métriques IA</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="api-status-bar">
+        <span class="status-dot loading" id="sidebar-dot"></span>
+        <span class="status-text" id="sidebar-label">Vérification…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════
+       CONTENU PRINCIPAL
+  ══════════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-content">
+
+      <!-- ── Header ─────────────────────────────────── -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Historique des <span class="accent">Diagnostics</span></h1>
+          <p style="font-size:.78rem;color:var(--texte-secondaire);margin-top:4px">
+            Base SQLite · 50 entrées max · Persistance entre sessions
+          </p>
+        </div>
+        <div class="header-right">
+          <div class="header-clock" id="horloge">--:--:--</div>
+          <span class="badge badge-muted" id="badge-total">0 entrée</span>
+        </div>
+      </div>
+
+      <!-- ── FILTRES ─────────────────────────────────── -->
+      <div class="filtres-row card" style="padding:14px 20px;margin-bottom:18px">
+        <div class="filtre-group">
+          <label class="filtre-label">Classe de panne</label>
+          <select class="filtre-select" id="f-classe" onchange="appliquerFiltres()">
+            <option value="">Toutes</option>
+            <option value="0">Normal</option>
+            <option value="1">Ombrage partiel</option>
+            <option value="2">Court-circuit</option>
+            <option value="3">Circuit ouvert</option>
+            <option value="4">Dégradation PID</option>
+            <option value="5">Encrassement</option>
+            <option value="6">Défaut connexion</option>
+            <option value="7">Vieillissement</option>
+          </select>
+        </div>
+        <div class="filtre-group">
+          <label class="filtre-label">Niveau d'alerte</label>
+          <select class="filtre-select" id="f-alerte" onchange="appliquerFiltres()">
+            <option value="">Tous</option>
+            <option value="Normal">Normal</option>
+            <option value="Attention">Attention</option>
+            <option value="Alerte">Alerte</option>
+            <option value="Critique">Critique</option>
+          </select>
+        </div>
+        <div class="filtre-group">
+          <label class="filtre-label">Date (à partir de)</label>
+          <input class="filtre-date" type="date" id="f-date" onchange="appliquerFiltres()" />
+        </div>
+        <div class="filtres-actions">
+          <button class="btn btn-ghost" onclick="reinitFiltres()" style="font-size:.78rem;padding:6px 14px">
+            Réinitialiser filtres
+          </button>
+          <button class="btn btn-outline" onclick="exporterCSV()" style="font-size:.78rem;padding:6px 14px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Exporter CSV
+          </button>
+          <button class="btn btn-ghost" onclick="confirmerEffacement()"
+                  style="font-size:.78rem;padding:6px 14px;color:var(--accent-danger);border-color:rgba(239,68,68,.3)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Effacer
+          </button>
+        </div>
+      </div>
+
+      <!-- ── GRAPHIQUES ──────────────────────────────── -->
+      <div class="charts-row">
+
+        <!-- Camembert répartition pannes -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Répartition des pannes</span>
+            <span class="badge badge-muted" id="doughnut-total">—</span>
+          </div>
+          <div class="chart-container" style="height:200px">
+            <canvas id="chart-doughnut"></canvas>
+          </div>
+        </div>
+
+        <!-- Courbe évolution score de santé -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Évolution du score de santé</span>
+            <span style="font-size:.7rem;color:var(--texte-muted)">30 derniers diagnostics</span>
+          </div>
+          <div class="chart-container" style="height:200px">
+            <canvas id="chart-timeline"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── TABLEAU ─────────────────────────────────── -->
+      <div class="table-wrapper">
+        <table class="hist-table">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Timestamp</th>
+              <th>Panne détectée</th>
+              <th>Confiance</th>
+              <th>Score anomalie</th>
+              <th>Alerte</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="hist-tbody">
+            <tr><td colspan="7" class="cell-loading">
+              <div class="spinner"></div> Chargement…
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-row" id="pagination-row">
+        <button class="btn btn-ghost btn-page" id="btn-prev" onclick="changerPage(-1)" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Précédent
+        </button>
+        <span class="page-info" id="page-info">Page 1 / 1</span>
+        <button class="btn btn-ghost btn-page" id="btn-next" onclick="changerPage(1)" disabled>
+          Suivant
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ── Modal détails ─────────────────────────────────────── -->
+<div id="modal-details" class="modal-overlay hidden" onclick="fermerModal(event)">
+  <div class="modal-box" id="modal-content">
+    <!-- Rempli dynamiquement par history.js -->
+  </div>
+</div>
+
+<!-- ── Modal confirmation effacement ─────────────────────── -->
+<div id="modal-confirm" class="modal-overlay hidden" onclick="fermerModalConfirm(event)">
+  <div class="modal-box modal-box-sm">
+    <div style="color:var(--accent-danger);display:flex;justify-content:center;margin-bottom:12px">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <h3 style="font-family:var(--font-titre);font-size:1.15rem;font-weight:700;color:var(--texte-principal);text-align:center;margin-bottom:8px">
+      Effacer l'historique ?
+    </h3>
+    <p style="font-size:.83rem;color:var(--texte-secondaire);text-align:center;margin-bottom:20px;line-height:1.6">
+      Cette action est irréversible.<br>Tous les diagnostics seront supprimés.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-ghost" onclick="fermerModalConfirm()">Annuler</button>
+      <button class="btn" onclick="effacerHistorique()"
+              style="background:var(--accent-danger);color:#fff;border-color:var(--accent-danger)">
+        Tout supprimer
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>

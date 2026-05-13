@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolarAI — Métriques IA</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/metrics.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ══════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2"    x2="12" y2="5"/>
+        <line x1="12" y1="19"   x2="12" y2="22"/>
+        <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"/>
+        <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+        <line x1="2"  y1="12" x2="5"  y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.22"  y1="19.78" x2="6.34"  y2="17.66"/>
+        <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+      </svg>
+      <span class="logo-text">SolarAI</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigation</div>
+      <a href="index.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="diagnostic.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/>
+        </svg>
+        <span>Diagnostic IA</span>
+      </a>
+      <a href="history.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>
+        </svg>
+        <span>Historique</span>
+      </a>
+      <a href="metrics.html" class="nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+        <span>Métriques IA</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="api-status-bar">
+        <span class="status-dot loading" id="sidebar-dot"></span>
+        <span class="status-text" id="sidebar-label">Vérification…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════
+       CONTENU PRINCIPAL
+  ══════════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-content">
+
+      <!-- ── Header ─────────────────────────────────── -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Métriques du <span class="accent">Modèle IA</span></h1>
+          <p style="font-size:.78rem;color:var(--texte-secondaire);margin-top:4px">
+            XGBoost · Jeu de test isolé · Entraîné sur 4 800 échantillons
+          </p>
+        </div>
+        <div class="header-right">
+          <div class="header-clock" id="horloge">--:--:--</div>
+          <span class="badge badge-muted" id="badge-modele">—</span>
+        </div>
+      </div>
+
+      <!-- ── KPI MÉTRIQUES ─────────────────────────── -->
+      <div class="metrics-kpi-grid" id="kpi-zone">
+        <div class="metric-kpi-card">
+          <div class="kpi-icon succes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Accuracy globale</div>
+            <div class="kpi-value" id="m-accuracy">—</div>
+          </div>
+        </div>
+        <div class="metric-kpi-card">
+          <div class="kpi-icon cyan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">F1-Score Macro</div>
+            <div class="kpi-value" id="m-f1macro">—</div>
+          </div>
+        </div>
+        <div class="metric-kpi-card">
+          <div class="kpi-icon orange">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6"  y1="20" x2="6"  y2="14"/>
+            </svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Échantillons test</div>
+            <div class="kpi-value" id="m-ntest">—</div>
+          </div>
+        </div>
+        <div class="metric-kpi-card">
+          <div class="kpi-icon violet">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Feature principale</div>
+            <div class="kpi-value kpi-value-sm" id="m-top-feat">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── LIGNE : Feature importance + Rapport ── -->
+      <div class="metrics-main-grid">
+
+        <!-- Feature importance -->
+        <div class="card metrics-card" style="animation:fadeInUp .45s ease">
+          <div class="metrics-card-header">
+            <span class="metrics-card-title">Importance des Features</span>
+            <span class="badge badge-muted" id="feat-count">22 features</span>
+          </div>
+          <div style="height:340px;margin-top:8px">
+            <canvas id="chart-importance"></canvas>
+          </div>
+        </div>
+
+        <!-- Rapport de classification -->
+        <div class="card metrics-card" style="animation:fadeInUp .5s ease">
+          <div class="metrics-card-header">
+            <span class="metrics-card-title">Rapport de Classification</span>
+            <span class="badge badge-succes" style="font-size:.65rem">8 classes</span>
+          </div>
+          <div class="rapport-table-wrapper">
+            <table class="rapport-table" id="rapport-table">
+              <thead>
+                <tr>
+                  <th>Classe</th>
+                  <th>Précision</th>
+                  <th>Rappel</th>
+                  <th>F1-Score</th>
+                  <th>Support</th>
+                </tr>
+              </thead>
+              <tbody id="rapport-tbody">
+                <tr><td colspan="5" class="cell-loading">
+                  <div class="spinner"></div> Chargement…
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── BARRE COMPARAISON CLASSES ─────────────── -->
+      <div class="card" style="margin-top:0;animation:fadeInUp .55s ease;padding:20px 24px">
+        <div class="metrics-card-header" style="margin-bottom:14px">
+          <span class="metrics-card-title">F1-Score par Classe</span>
+          <span style="font-size:.72rem;color:var(--texte-muted)">Toutes les classes · Jeu de test</span>
+        </div>
+        <div style="height:220px">
+          <canvas id="chart-f1classes"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/metrics.js"></script>
+</body>
+</html>

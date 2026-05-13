@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolarAI — Diagnostic IA</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/diagnostic.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ══════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2"    x2="12" y2="5"/>
+        <line x1="12" y1="19"   x2="12" y2="22"/>
+        <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"/>
+        <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+        <line x1="2"  y1="12" x2="5"  y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.22"  y1="19.78" x2="6.34"  y2="17.66"/>
+        <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+      </svg>
+      <span class="logo-text">SolarAI</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigation</div>
+      <a href="index.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="diagnostic.html" class="nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/>
+        </svg>
+        <span>Diagnostic IA</span>
+      </a>
+      <a href="history.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>
+        </svg>
+        <span>Historique</span>
+      </a>
+      <a href="metrics.html" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+        <span>Métriques IA</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="api-status-bar">
+        <span class="status-dot loading" id="sidebar-dot"></span>
+        <span class="status-text" id="sidebar-label">Vérification…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════
+       CONTENU PRINCIPAL
+  ══════════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-content">
+
+      <!-- ── Header ─────────────────────────────────── -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Diagnostic <span class="accent">Intelligent</span> de Pannes</h1>
+          <p style="font-size:.78rem;color:var(--texte-secondaire);margin-top:4px">
+            Pipeline IA · RandomForest / XGBoost · 8 classes · Détection anomalie + RUL
+          </p>
+        </div>
+        <div class="header-right">
+          <div class="header-clock" id="horloge">--:--:--</div>
+          <span class="badge badge-cyan" id="badge-modele">XGBoost</span>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           LAYOUT 2 COLONNES
+      ══════════════════════════════════ -->
+      <div class="diag-cols">
+
+        <!-- ── COLONNE GAUCHE : Saisie ──────── -->
+        <div class="diag-left">
+
+          <!-- Scénarios rapides -->
+          <div class="scenarios-card card">
+            <div class="card-inner-header">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              Scénarios rapides
+            </div>
+            <div class="scenarios-bar">
+              <button class="btn-scenario" data-preset="Normal">
+                <span class="sc-dot" style="background:#10b981"></span>Normal
+              </button>
+              <button class="btn-scenario" data-preset="Ombrage">
+                <span class="sc-dot" style="background:#f59e0b"></span>Ombrage partiel
+              </button>
+              <button class="btn-scenario" data-preset="Court-circuit">
+                <span class="sc-dot" style="background:#ef4444"></span>Court-circuit
+              </button>
+              <button class="btn-scenario" data-preset="PID">
+                <span class="sc-dot" style="background:#ff6b35"></span>Dégradation PID
+              </button>
+              <button class="btn-scenario" data-preset="Encrassement">
+                <span class="sc-dot" style="background:#94a3b8"></span>Encrassement
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulaire sliders -->
+          <div class="form-card card">
+            <div class="card-inner-header">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6"  x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              Paramètres du panneau — 16 mesures
+            </div>
+
+            <form id="diag-form" autocomplete="off">
+              <div class="params-grid">
+
+                <!-- Irradiance -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Irradiance</span>
+                    <span class="param-unit">W/m²</span>
+                    <input class="param-input" type="number" name="irradiance" value="950" min="0" max="1200" step="1" />
+                  </div>
+                  <input class="param-slider" type="range" name="irradiance_sl" min="0" max="1200" step="1" value="950" />
+                  <div class="param-range-labels"><span>0</span><span>1200</span></div>
+                </div>
+
+                <!-- Temp panneau -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Temp. panneau</span>
+                    <span class="param-unit">°C</span>
+                    <input class="param-input" type="number" name="temperature_panneau" value="45" min="15" max="85" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="temperature_panneau_sl" min="15" max="85" step="0.5" value="45" />
+                  <div class="param-range-labels"><span>15</span><span>85</span></div>
+                </div>
+
+                <!-- Temp ambiante -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Temp. ambiante</span>
+                    <span class="param-unit">°C</span>
+                    <input class="param-input" type="number" name="temperature_ambiante" value="28" min="-5" max="45" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="temperature_ambiante_sl" min="-5" max="45" step="0.5" value="28" />
+                  <div class="param-range-labels"><span>-5</span><span>45</span></div>
+                </div>
+
+                <!-- Tension VOC -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Tension VOC</span>
+                    <span class="param-unit">V</span>
+                    <input class="param-input" type="number" name="tension_voc" value="41.5" min="0" max="50" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="tension_voc_sl" min="0" max="50" step="0.1" value="41.5" />
+                  <div class="param-range-labels"><span>0</span><span>50</span></div>
+                </div>
+
+                <!-- Courant ISC -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Courant ISC</span>
+                    <span class="param-unit">A</span>
+                    <input class="param-input" type="number" name="courant_isc" value="10.2" min="0" max="12" step="0.01" />
+                  </div>
+                  <input class="param-slider" type="range" name="courant_isc_sl" min="0" max="12" step="0.1" value="10.2" />
+                  <div class="param-range-labels"><span>0</span><span>12</span></div>
+                </div>
+
+                <!-- Puissance MPP -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Puissance MPP</span>
+                    <span class="param-unit">W</span>
+                    <input class="param-input" type="number" name="puissance_mpp" value="360" min="0" max="550" step="1" />
+                  </div>
+                  <input class="param-slider" type="range" name="puissance_mpp_sl" min="0" max="550" step="1" value="360" />
+                  <div class="param-range-labels"><span>0</span><span>550</span></div>
+                </div>
+
+                <!-- Tension MPP -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Tension MPP</span>
+                    <span class="param-unit">V</span>
+                    <input class="param-input" type="number" name="tension_mpp" value="35.8" min="0" max="42" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="tension_mpp_sl" min="0" max="42" step="0.1" value="35.8" />
+                  <div class="param-range-labels"><span>0</span><span>42</span></div>
+                </div>
+
+                <!-- Courant MPP -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Courant MPP</span>
+                    <span class="param-unit">A</span>
+                    <input class="param-input" type="number" name="courant_mpp" value="10.1" min="0" max="13" step="0.01" />
+                  </div>
+                  <input class="param-slider" type="range" name="courant_mpp_sl" min="0" max="13" step="0.1" value="10.1" />
+                  <div class="param-range-labels"><span>0</span><span>13</span></div>
+                </div>
+
+                <!-- Résistance série -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Résist. série</span>
+                    <span class="param-unit">Ω</span>
+                    <input class="param-input" type="number" name="resistance_serie" value="0.3" min="0.1" max="5" step="0.01" />
+                  </div>
+                  <input class="param-slider" type="range" name="resistance_serie_sl" min="0.1" max="5" step="0.05" value="0.3" />
+                  <div class="param-range-labels"><span>0.1</span><span>5</span></div>
+                </div>
+
+                <!-- Résistance shunt -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Résist. shunt</span>
+                    <span class="param-unit">Ω</span>
+                    <input class="param-input" type="number" name="resistance_shunt" value="7500" min="100" max="10000" step="10" />
+                  </div>
+                  <input class="param-slider" type="range" name="resistance_shunt_sl" min="100" max="10000" step="50" value="7500" />
+                  <div class="param-range-labels"><span>100</span><span>10k</span></div>
+                </div>
+
+                <!-- Fill Factor -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Fill Factor</span>
+                    <span class="param-unit">%</span>
+                    <input class="param-input" type="number" name="fill_factor" value="76" min="40" max="85" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="fill_factor_sl" min="40" max="85" step="0.5" value="76" />
+                  <div class="param-range-labels"><span>40</span><span>85</span></div>
+                </div>
+
+                <!-- Efficacité -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Efficacité</span>
+                    <span class="param-unit">%</span>
+                    <input class="param-input" type="number" name="efficacite" value="19.5" min="0" max="22" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="efficacite_sl" min="0" max="22" step="0.1" value="19.5" />
+                  <div class="param-range-labels"><span>0</span><span>22</span></div>
+                </div>
+
+                <!-- Temps fonctionnement -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Temps fonct.</span>
+                    <span class="param-unit">h</span>
+                    <input class="param-input" type="number" name="temps_fonctionnement" value="8000" min="0" max="50000" step="100" />
+                  </div>
+                  <input class="param-slider" type="range" name="temps_fonctionnement_sl" min="0" max="50000" step="500" value="8000" />
+                  <div class="param-range-labels"><span>0</span><span>50k</span></div>
+                </div>
+
+                <!-- Humidité -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Humidité</span>
+                    <span class="param-unit">%</span>
+                    <input class="param-input" type="number" name="humidite" value="35" min="10" max="95" step="1" />
+                  </div>
+                  <input class="param-slider" type="range" name="humidite_sl" min="10" max="95" step="1" value="35" />
+                  <div class="param-range-labels"><span>10</span><span>95</span></div>
+                </div>
+
+                <!-- Vitesse vent -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Vitesse vent</span>
+                    <span class="param-unit">m/s</span>
+                    <input class="param-input" type="number" name="vitesse_vent" value="5" min="0" max="20" step="0.1" />
+                  </div>
+                  <input class="param-slider" type="range" name="vitesse_vent_sl" min="0" max="20" step="0.1" value="5" />
+                  <div class="param-range-labels"><span>0</span><span>20</span></div>
+                </div>
+
+                <!-- Facteur idéalité -->
+                <div class="param-row">
+                  <div class="param-header">
+                    <span class="param-name">Fact. idéalité</span>
+                    <span class="param-unit"></span>
+                    <input class="param-input" type="number" name="facteur_idealite" value="1.2" min="1" max="2" step="0.01" />
+                  </div>
+                  <input class="param-slider" type="range" name="facteur_idealite_sl" min="1" max="2" step="0.01" value="1.2" />
+                  <div class="param-range-labels"><span>1.0</span><span>2.0</span></div>
+                </div>
+
+              </div><!-- /params-grid -->
+
+              <!-- Bouton lancer -->
+              <button type="submit" class="btn-lancer" id="btn-lancer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                <span id="btn-lancer-txt">⚡ LANCER LE DIAGNOSTIC</span>
+              </button>
+
+            </form>
+          </div>
+
+        </div>
+        <!-- /COLONNE GAUCHE -->
+
+        <!-- ── COLONNE DROITE : Résultats ───── -->
+        <div class="diag-right">
+
+          <!-- État initial -->
+          <div id="res-placeholder" class="res-placeholder">
+            <div class="placeholder-glow"></div>
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color:var(--texte-muted);opacity:.4">
+              <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>
+              <line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/>
+              <line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/>
+            </svg>
+            <p style="font-family:var(--font-titre);font-size:1rem;color:var(--texte-secondaire);letter-spacing:.5px">
+              Entrez les paramètres et lancez le diagnostic
+            </p>
+            <p style="font-size:.8rem;color:var(--texte-muted);text-align:center;line-height:1.7">
+              Sélectionnez un scénario rapide ou<br>renseignez les 16 mesures manuellement
+            </p>
+          </div>
+
+          <!-- Spinner -->
+          <div id="res-loading" class="res-loading hidden">
+            <div class="loading-arc"></div>
+            <div style="font-size:.88rem;color:var(--texte-secondaire)">Analyse IA en cours…</div>
+            <div style="font-size:.75rem;color:var(--texte-muted)">Classification · Détection anomalie · RUL</div>
+          </div>
+
+          <!-- Résultat -->
+          <div id="res-panel" class="hidden">
+
+            <!-- ① Jauge circulaire de santé -->
+            <div class="gauge-section">
+              <svg class="health-gauge" viewBox="0 0 200 200" width="160" height="160">
+                <!-- Cercle de fond -->
+                <circle cx="100" cy="100" r="80" fill="none"
+                        stroke="#1f2937" stroke-width="14"/>
+                <!-- Arc animé -->
+                <circle cx="100" cy="100" r="80" fill="none"
+                        stroke="#00d4ff" stroke-width="14"
+                        stroke-linecap="round"
+                        stroke-dasharray="502"
+                        stroke-dashoffset="502"
+                        transform="rotate(-90 100 100)"
+                        id="gauge-arc"/>
+                <!-- Valeur centrale -->
+                <text x="100" y="96" text-anchor="middle"
+                      font-family="'JetBrains Mono', monospace"
+                      font-size="32" font-weight="600" fill="#e2e8f0"
+                      id="gauge-val">—</text>
+                <text x="100" y="118" text-anchor="middle"
+                      font-family="'Inter', sans-serif"
+                      font-size="11" fill="#94a3b8">Score de Santé</text>
+              </svg>
+            </div>
+
+            <!-- ② Badge panne détectée -->
+            <div id="res-badge-panne" class="res-badge-panne"></div>
+
+            <!-- ③ Score anomalie -->
+            <div class="anomalie-block">
+              <div class="anom-header">
+                <span class="anom-label">Score d'anomalie</span>
+                <span id="anom-niveau-badge" class="badge badge-succes">NORMAL</span>
+              </div>
+              <div class="anom-bar-bg">
+                <div class="anom-bar-fill" id="anom-fill" style="width:0%"></div>
+              </div>
+              <div class="anom-values">
+                <span style="font-size:.7rem;color:var(--texte-muted)">0</span>
+                <span id="anom-score-val" class="text-mono" style="font-size:.85rem;color:var(--texte-secondaire)">—/100</span>
+                <span style="font-size:.7rem;color:var(--texte-muted)">100</span>
+              </div>
+            </div>
+
+            <!-- ④ Probabilités Chart.js -->
+            <div class="probas-block">
+              <div class="res-section-label">Probabilités par classe</div>
+              <div style="position:relative;height:180px">
+                <canvas id="proba-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- ⑤ Durée de vie restante -->
+            <div class="rul-block" id="rul-block"></div>
+
+            <!-- ⑥ Recommandations -->
+            <div class="recs-block" id="recs-block"></div>
+
+            <!-- Actions -->
+            <div class="res-actions">
+              <button class="btn btn-outline" id="btn-pdf" onclick="genererRapportPDF()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                Générer Rapport PDF
+              </button>
+              <button class="btn btn-ghost" onclick="reinitialiser()">Nouvelle analyse</button>
+            </div>
+
+          </div><!-- /res-panel -->
+
+        </div>
+        <!-- /COLONNE DROITE -->
+
+      </div>
+      <!-- /LAYOUT 2 COLONNES -->
+
+    </div>
+  </main>
+
+</div><!-- /app-layout -->
+
+<script src="js/api.js"></script>
+<script src="js/diagnostic.js"></script>
+</body>
+</html>
