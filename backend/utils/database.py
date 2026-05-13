@@ -59,7 +59,7 @@ def sauvegarder_diagnostic(
                rul_annees, rul_statut, mesures_json)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             classe, libelle, confiance,
             anomalie_score, anomalie_niveau,
             rul_annees, rul_statut,

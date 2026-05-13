@@ -122,7 +122,6 @@ class FaultClassifier:
                 n_estimators=300,
                 learning_rate=0.1,
                 max_depth=6,
-                use_label_encoder=False,
                 eval_metric="mlogloss",
                 random_state=42,
                 n_jobs=-1,
@@ -235,6 +234,7 @@ class FaultClassifier:
         joblib.dump(self.best_model, SAVE_DIR / "best_model.pkl")
         joblib.dump(self.scaler,     SAVE_DIR / "scaler.pkl")
         joblib.dump(FEATURE_COLS,    SAVE_DIR / "feature_list.joblib")
+        joblib.dump(self.best_name,  SAVE_DIR / "best_name.joblib")
         print(f"  best_model.pkl  → {SAVE_DIR / 'best_model.pkl'}")
         print(f"  scaler.pkl      → {SAVE_DIR / 'scaler.pkl'}")
 
@@ -277,5 +277,6 @@ class FaultClassifier:
         fc = cls()
         fc.best_model = joblib.load(SAVE_DIR / "best_model.pkl")
         fc.scaler     = joblib.load(SAVE_DIR / "scaler.pkl")
-        fc.best_name  = "chargé depuis disque"
+        name_path     = SAVE_DIR / "best_name.joblib"
+        fc.best_name  = joblib.load(name_path) if name_path.exists() else "XGBoost"
         return fc
