@@ -1,7 +1,7 @@
 # 🌞 SolarAI Diagnostic System
 
 Système de diagnostic intelligent pour panneaux photovoltaïques basé sur l'intelligence artificielle.  
-Projet de Fin d'Année — Génie Maintenance & Instrumentation — INSAT Tunis (2024–2025).
+Projet de Fin d'Année — Génie Maintenance & Instrumentation — INSAT Tunis (2025–2026).
 
 ---
 
@@ -247,7 +247,7 @@ solar-ai-diagnostic/
 **Barhoumi Montassar**  
 Étudiant en Génie Maintenance & Instrumentation (3ème année)  
 Institut National des Sciences Appliquées et de Technologie — **INSAT Tunis**  
-Université de Carthage — Année universitaire **2024–2025**
+Université de Carthage — Année universitaire **2025–2026**
 
 ---
 

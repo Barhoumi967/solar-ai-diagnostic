@@ -639,7 +639,7 @@ def _p1_garde(el: list, diag: dict, s: dict) -> None:
         ["Filière",      "Génie Maintenance & Instrumentation — 3ème année"],
         ["Projet",       "Projet de Fin d'Année — Diagnostic Intelligent Panneaux Solaires"],
         ["Auteur",       "Barhoumi Montassar"],
-        ["Année",        "2024 – 2025"],
+        ["Année",        "2025 – 2026"],
         ["Généré le",    now.strftime("%d/%m/%Y à %H:%M:%S")],
         ["Référence",    f"SOLARAI-DIAG-{now.strftime('%Y%m%d-%H%M%S')}"],
     ]
@@ -872,13 +872,13 @@ def _p3_methodes_ia(el: list, diag: dict, s: dict) -> None:
 
     hyp_xgb = [
         ["Hyperparamètre",      "Valeur",     "Rôle"],
-        ["n_estimators",        "200",        "Nombre d'arbres dans l'ensemble (profondeur du boosting)"],
+        ["n_estimators",        "300",        "Nombre d'arbres dans l'ensemble (profondeur du boosting)"],
         ["max_depth",           "6",          "Profondeur maximale — évite l'overfitting sur features bruit"],
         ["learning_rate (η)",   "0.1",        "Taux d'apprentissage — contrôle la contribution de chaque arbre"],
-        ["subsample",           "0.8",        "Fraction d'échantillons par arbre — stochastique, réduit variance"],
-        ["colsample_bytree",    "0.8",        "Fraction de features par arbre — régularisation supplémentaire"],
-        ["reg_lambda (L2)",     "1.0",        "Régularisation ridge sur les poids des feuilles"],
-        ["reg_alpha (L1)",      "0.0",        "Régularisation lasso (non activée ici)"],
+        ["subsample",           "1.0",        "Fraction d'échantillons par arbre (valeur par défaut XGBoost)"],
+        ["colsample_bytree",    "1.0",        "Fraction de features par arbre (valeur par défaut XGBoost)"],
+        ["reg_lambda (L2)",     "1.0",        "Régularisation ridge sur les poids des feuilles (défaut)"],
+        ["reg_alpha (L1)",      "0.0",        "Régularisation lasso (non activée — défaut)"],
         ["objective",           "multi:softprob", "Sortie : probabilités pour chacune des 8 classes"],
         ["eval_metric",         "mlogloss",   "Perte logarithmique multiclasse sur le jeu de validation"],
     ]
@@ -1446,8 +1446,8 @@ def _p7_technique(el: list, diag: dict, s: dict) -> None:
     arch_data = [
         ["Étape",       "Composant",            "Algorithme / Technologie",                     "Sortie produite"],
         ["① Features",  "FeatureEngineering",   "16 brutes → +6 dérivées (formules physiques)", "Vecteur 22 dim."],
-        ["② Classif.",  "FaultClassifier",      "XGBoost — n_est=200, depth=6, multi:softprob", "Classe 0–7 + probas"],
-        ["③ Anomalie",  "AnomalyDetector",      "Isolation Forest — n_est=100, cont.=0.1",      "Score 0–100"],
+        ["② Classif.",  "FaultClassifier",      "XGBoost — n_est=300, depth=6, multi:softprob", "Classe 0–7 + probas"],
+        ["③ Anomalie",  "AnomalyDetector",      "Isolation Forest — n_est=200, cont.=0.02",     "Score 0–100"],
         ["④ RUL",       "LifetimePredictor",    "Ridge + PolynomialFeatures(deg=3)",             "RUL (h et années)"],
         ["⑤ Rapport",   "ReportGenerator",      "ReportLab 4.2 + Matplotlib 3.9",               "PDF 7 pages"],
     ]
@@ -1584,7 +1584,7 @@ def _p7_technique(el: list, diag: dict, s: dict) -> None:
     el.append(Spacer(1, 10))
     el.append(_hr(C_MUTED))
     el.append(Paragraph(
-        "Dataset synthétique généré à des fins pédagogiques — INSAT Tunis 2024–2025. "
+        "Dataset synthétique généré à des fins pédagogiques — INSAT Tunis 2025–2026. "
         "Projet de Fin d'Année · Barhoumi Montassar · Génie Maintenance & Instrumentation.",
         s["body_muted"]))
 
